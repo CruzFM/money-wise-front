@@ -1,21 +1,10 @@
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-
-//Primero deberiamos hacer el formulario, con sus validaciones
-    //email
-    //password
-    //submit button
-//Segundo, enviar la informacion al servidor para obtener token
-//Tercero, guardar token en sessionStorage
-//Cuarto, redirigir hacia '/'
-//Quinto, proteger rutas
-    //proteger ruta '/'
-    //proteger rutas /login y /register despues de hecho el /login
 
 export default function Login() {
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -72,6 +61,9 @@ export default function Login() {
   );
 
   return(
-    <LoginForm />
+    <>
+        <LoginForm />
+        <Link to={'/register'}>Register here</Link>
+    </>
   );
 }
