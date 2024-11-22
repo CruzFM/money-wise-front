@@ -1,13 +1,15 @@
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-// import { Button } from "@/components/ui/button";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import axios from "axios";
 
 export default function Register() {
   const apiUrl = import.meta.env.VITE_API_URL;
+
+  const navigate = useNavigate();
 
   const SignupSchema = Yup.object().shape({
     username: Yup.string().required("Required"),
@@ -15,18 +17,23 @@ export default function Register() {
     password: Yup.string().required("Required"),
   });
 
+  const handleSubmit = async (value) => {
+    console.log(value);
+    try {
+      const response = await axios.post(`${apiUrl}auth/register`, value);
+      console.log("usuario registrado", response);
+      navigate("/login");
+    } catch (error) {
+      console.error("la cagaste en el registro: ", error);
+    }
+  };
+
 return (
     <Formik
       initialValues={{ username: "", email: "", password: "" }}
       validationSchema={SignupSchema}
-      onSubmit={async (values) => {
-        console.log(values);
-        try {
-          const response = await axios.post(`${apiUrl}auth/register`, values);
-          console.log("usuario registrado", response);
-        } catch (error) {
-          console.error("la cagaste en el registro: ", error);
-        }
+      onSubmit={ (values) => {
+        handleSubmit(values);
       }}
     >
       {({ isSubmitting }) => (
