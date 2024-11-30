@@ -2,9 +2,17 @@ import { useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { ArrowUpCircle, ArrowDownCircle } from "lucide-react";
-import { Card,  CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
-export default function AddTransaction({ isAdding, setIsAdding, handleAddTransaction }) {
+export default function AddTransaction({
+  isAdding,
+  setIsAdding,
+  handleAddTransaction,
+  getAllTransactions,
+  setIncomes,
+  setExpenses,
+  getTransaction,
+}) {
   const [selectedType, setSelectedType] = useState(null);
   const TransactionTypeSelector = ({ onSelect, onCancel }) => (
     <div className="space-y-4">
@@ -178,6 +186,9 @@ export default function AddTransaction({ isAdding, setIsAdding, handleAddTransac
                   setSelectedType(null);
                   console.log(values);
                   handleAddTransaction(values);
+                  getAllTransactions();
+                  getTransaction("incomes", setIncomes);
+                  getTransaction("expenses", setExpenses);
                 } catch (error) {
                   console.error("Error adding transaction:", error);
                 }

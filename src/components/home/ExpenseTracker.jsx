@@ -1,64 +1,55 @@
 import { useEffect, useState } from "react";
 import {
   Plus,
-  Filter,
-  Trash2,
-  Edit2,
-  ArrowUpCircle,
-  ArrowDownCircle,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import axios from "axios";
-import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
 import AddTransaction from "./AddTransaction";
+import TransactionsGrid from "./TransactionsGrid";
 
 const ExpenseTracker = () => {
   const [transactions, setTransactions] = useState([]);
+  const [incomes, setIncomes] = useState([]);
+  const [expenses, setExpenses] = useState([]);
+  const [view, setView] = useState("all");
+  const [isAdding, setIsAdding] = useState(false);
 
-  const incomes = () => {
-    let filtered = transactions.filter((item) => item?.type === "income");
-    if (!filtered) {
-      console.log("no se encontro expense, wachin.");
-    }
-    return filtered;
-  };
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const authToken = sessionStorage.getItem("auth_token");
 
-  const expenses = () => {
-    let filtered = transactions.filter((item) => item?.type === "expense");
-    if (!filtered) {
-      console.log("no se encontro expense, wachin.");
-    }
-    return filtered;
-  };
-
+  //Gets a single transaction array of Obj based on a string parameter
+  const getTransaction = async ( transactionType, functionSetter ) => {
+    const transaction = await axios.get(`${apiUrl}/transactions/${transactionType}`,{
+      headers: {
+        Authorization: `Bearer ${authToken}`
+      } 
+    });
+    functionSetter(transaction.data)
+    console.log(`Ahora la transaccion del tipo ${transactionType} es: `, transaction);
+  }
+  
+  //Calculates amount for each transaction
   const calculateAmount = (array) => {
     let total = 0;
     if (array.length !== 0) {
       array.forEach((element) => {
         total = total + element.amount;
-        console.log("aca el amount fue: ", element.amount)
       });
     }
     return total;
   };
 
+  //Calculates balance
   const calculateBalance = () => {
-    let totalIncomesAmount = calculateAmount(incomes());
-    let totalExpensesAmount = calculateAmount(expenses());
+    let totalIncomesAmount = calculateAmount(incomes);
+    let totalExpensesAmount = calculateAmount(expenses);
     return totalIncomesAmount - totalExpensesAmount;
   };
 
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const authToken = sessionStorage.getItem("auth_token");
-
-  const [view, setView] = useState("all"); // all, expenses, incomes
-  const [isAdding, setIsAdding] = useState(false);
-  const [selectedType, setSelectedType] = useState(null);
 
   const handleAddTransaction = async ( value ) => {
     try {
-        let response = await axios.post(`${apiUrl}transactions/new`, value,  {
+        let response = await axios.post(`${apiUrl}/transactions/new`, value,  {
             headers: {
                 Authorization: `Bearer ${authToken}`,
             }, 
@@ -70,23 +61,26 @@ const ExpenseTracker = () => {
     }
   };
 
+  // Gets all transactions
   const getAllTransactions = async () => {
-    const response = await axios.get(`${apiUrl}transactions/all`, {
+    const response = await axios.get(`${apiUrl}/transactions/all`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
     });
     setTransactions(response.data);
-    console.log(response.data);
   };
 
+  //When the component is mounted, it gets all transactions and incomes and expenses
   useEffect(() => {
     getAllTransactions();
-    let testIncomes = incomes()
-    console.log("testIncomes es: ", testIncomes)
-    let calculatedIncomes = calculateAmount( testIncomes )
-    console.log("el calculo dio: ", calculatedIncomes)
+    getTransaction("incomes", setIncomes);
+    getTransaction("expenses", setExpenses);
   }, []);
+
+  useEffect( ()=>{
+    console.log(view)
+  },[view])
 
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-6">
@@ -108,7 +102,7 @@ const ExpenseTracker = () => {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold text-green-600">
-              ${calculateAmount( incomes() )}
+              ${calculateAmount( incomes )}
             </p>
           </CardContent>
         </Card>
@@ -118,7 +112,7 @@ const ExpenseTracker = () => {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold text-red-600">
-              ${calculateAmount( expenses() )}
+              ${calculateAmount( expenses )}
             </p>
           </CardContent>
         </Card>
@@ -147,7 +141,9 @@ const ExpenseTracker = () => {
             className={`px-4 py-2 rounded-lg ${
               view === "incomes" ? "bg-blue-500 text-white" : "bg-gray-100"
             }`}
-            onClick={() => setView("incomes")}
+            onClick={() =>{ 
+              setView("incomes")
+            }}
           >
             Income
           </button>
@@ -160,54 +156,13 @@ const ExpenseTracker = () => {
         </button>
       </div>
 
-      {/* Transactions List */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Transactions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {transactions.map((transaction) => (
-              <div
-                key={transaction.id}
-                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
-              >
-                <div className="flex items-center gap-4">
-                  <div
-                    className={`w-2 h-2 rounded-full ${
-                      transaction.type === "expense"
-                        ? "bg-red-500"
-                        : "bg-green-500"
-                    }`}
-                  />
-                  <div>
-                    <p className="font-medium">{transaction.description}</p>
-                    <p className="text-sm text-gray-500">{transaction.date}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <p
-                    className={`font-medium ${
-                      transaction.type === "expense"
-                        ? "text-red-500"
-                        : "text-green-500"
-                    }`}
-                  >
-                    {transaction.type === "expense" ? "-" : "+"}$
-                    {transaction.amount.toFixed(2)}
-                  </p>
-                  <button className="p-1 hover:bg-gray-200 rounded">
-                    <Edit2 size={16} />
-                  </button>
-                  <button className="p-1 hover:bg-gray-200 rounded">
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Transactions Grid */}
+      <TransactionsGrid
+        transactions={transactions}
+        incomes={incomes}
+        expenses={expenses}
+        view={view}
+      />
 
       {/* Add Transaction Modal */}
       {isAdding && (
@@ -215,6 +170,10 @@ const ExpenseTracker = () => {
           isAdding={isAdding}
           setIsAdding={setIsAdding}
           handleAddTransaction={handleAddTransaction}
+          getAllTransactions={getAllTransactions}
+          setIncomes={setIncomes}
+          setExpenses={setExpenses}
+          getTransaction={getTransaction}
         />
       )}
     </div>
