@@ -30,7 +30,7 @@ export default function Register() {
   const handleSubmit = async (value) => {
     console.log(value);
     try {
-      const response = await axios.post(`${apiUrl}auth/register`, value);
+      const response = await axios.post(`${apiUrl}/auth/register`, value);
       console.log("usuario registrado", response);
       navigate("/login");
     } catch (error) {

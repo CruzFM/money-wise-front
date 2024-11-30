@@ -28,7 +28,7 @@ export default function Login() {
 
   const handleLogin = async (value) => {
     try {
-      const response = await axios.post(`${apiUrl}auth/login`, value);
+      const response = await axios.post(`${apiUrl}/auth/login`, value);
       sessionStorage.setItem("auth_token", response.data.token);
       console.log("Bien ahi wachin, lo lograste!", response.data.token);
       navigate("/");
