@@ -5,7 +5,6 @@ import { ArrowUpCircle, ArrowDownCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 export default function AddTransaction({
-  isAdding,
   setIsAdding,
   handleAddTransaction,
   getAllTransactions,

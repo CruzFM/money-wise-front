@@ -1,9 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
-import { Edit2, Trash2 } from "lucide-react"
-import TransactionCard from "./TransactionCard"
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import TransactionCard from "./TransactionCard";
 
 
-export default function TransactionsGrid({ transactions, incomes, expenses, view, deleteTransaction }){
+export default function TransactionsGrid({ transactions, incomes, expenses, view, deleteTransaction, updateTransaction }){
     
     const renderView = () =>{
         if(view === "all"){
@@ -12,6 +11,7 @@ export default function TransactionsGrid({ transactions, incomes, expenses, view
                     transaction={transaction}
                     key={transaction._id}
                     deleteTransaction={deleteTransaction}
+                    updateTransaction={updateTransaction}
                 />
             ))
         } else if (view === "incomes") {
@@ -20,6 +20,7 @@ export default function TransactionsGrid({ transactions, incomes, expenses, view
                     transaction={income}
                     key={income._id}
                     deleteTransaction={deleteTransaction}
+                    updateTransaction={updateTransaction}
                 />
             ))
         } else if (view === "expenses"){
@@ -28,6 +29,7 @@ export default function TransactionsGrid({ transactions, incomes, expenses, view
                     transaction={expense}
                     key={expense._id}
                     deleteTransaction={deleteTransaction}
+                    updateTransaction={updateTransaction}
                 />
             ))
         }

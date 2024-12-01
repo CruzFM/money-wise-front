@@ -78,12 +78,26 @@ const ExpenseTracker = () => {
       }
     })
       .then( (res)=>{
-        getAllTransactions()
-        getTransaction("incomes", setIncomes)
-        getTransaction("expenses", setExpenses)
+        getAllTransactions();
+        getTransaction("incomes", setIncomes);
+        getTransaction("expenses", setExpenses);
         console.log("transaction deleted successfully ", res.data)
       })
       .catch(error => console.error(error))
+  }
+
+  const updateTransaction = (id, value) => {
+    axios.patch(`${apiUrl}/transactions/${id}`, value, {
+      headers: {
+        Authorization: `Bearer ${authToken}`
+      }
+    })
+    .then( ()=>{
+      getAllTransactions();
+      getTransaction("incomes", setIncomes);
+      getTransaction("expenses", setExpenses);
+    })
+    .catch(error => console.error(error))
   }
 
   //When the component is mounted, it gets all transactions and incomes and expenses
@@ -178,6 +192,7 @@ const ExpenseTracker = () => {
         expenses={expenses}
         view={view}
         deleteTransaction={deleteTransaction}
+        updateTransaction={updateTransaction}
       />
 
       {/* Add Transaction Modal */}

@@ -1,8 +1,9 @@
-import { Edit2, Trash2 } from "lucide-react"
+import { Edit2 } from "lucide-react"
 import DeleteTransactionButton from "./DeleteTransactionButton";
+import EditTransactionButton from "./EditTransactionButton";
 
 
-export default function TransactionCard({ transaction, deleteTransaction }) {
+export default function TransactionCard({ transaction, deleteTransaction, updateTransaction }) {
     
     return (
     <div
@@ -29,12 +30,10 @@ export default function TransactionCard({ transaction, deleteTransaction }) {
           {transaction.type === "expense" ? "-" : "+"}$
           {transaction.amount.toFixed(2)}
         </p>
-        <button className="p-1 hover:bg-gray-200 rounded">
-          <Edit2 size={16} />
-        </button>
-        {/* <button className="p-1 hover:bg-gray-200 rounded" onClick={()=> deleteTransaction(transaction._id)}>
-          <Trash2 size={16} />
-        </button> */}
+        <EditTransactionButton 
+          transaction={transaction}
+          updateTransaction={updateTransaction}
+        />
         <DeleteTransactionButton 
             transactionId={transaction._id}
             onDelete={deleteTransaction}
