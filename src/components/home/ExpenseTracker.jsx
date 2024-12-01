@@ -71,6 +71,21 @@ const ExpenseTracker = () => {
     setTransactions(response.data);
   };
 
+  const deleteTransaction = ( id ) => {
+    axios.delete(`${apiUrl}/transactions/${id}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`
+      }
+    })
+      .then( (res)=>{
+        getAllTransactions()
+        getTransaction("incomes", setIncomes)
+        getTransaction("expenses", setExpenses)
+        console.log("transaction deleted successfully ", res.data)
+      })
+      .catch(error => console.error(error))
+  }
+
   //When the component is mounted, it gets all transactions and incomes and expenses
   useEffect(() => {
     getAllTransactions();
@@ -162,6 +177,7 @@ const ExpenseTracker = () => {
         incomes={incomes}
         expenses={expenses}
         view={view}
+        deleteTransaction={deleteTransaction}
       />
 
       {/* Add Transaction Modal */}

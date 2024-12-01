@@ -3,7 +3,7 @@ import { Edit2, Trash2 } from "lucide-react"
 import TransactionCard from "./TransactionCard"
 
 
-export default function TransactionsGrid({ transactions, incomes, expenses, view}){
+export default function TransactionsGrid({ transactions, incomes, expenses, view, deleteTransaction }){
     
     const renderView = () =>{
         if(view === "all"){
@@ -11,6 +11,7 @@ export default function TransactionsGrid({ transactions, incomes, expenses, view
                 <TransactionCard
                     transaction={transaction}
                     key={transaction._id}
+                    deleteTransaction={deleteTransaction}
                 />
             ))
         } else if (view === "incomes") {
@@ -18,6 +19,7 @@ export default function TransactionsGrid({ transactions, incomes, expenses, view
                 <TransactionCard
                     transaction={income}
                     key={income._id}
+                    deleteTransaction={deleteTransaction}
                 />
             ))
         } else if (view === "expenses"){
@@ -25,6 +27,7 @@ export default function TransactionsGrid({ transactions, incomes, expenses, view
                 <TransactionCard
                     transaction={expense}
                     key={expense._id}
+                    deleteTransaction={deleteTransaction}
                 />
             ))
         }

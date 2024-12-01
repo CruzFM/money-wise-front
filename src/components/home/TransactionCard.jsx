@@ -1,7 +1,10 @@
 import { Edit2, Trash2 } from "lucide-react"
+import DeleteTransactionButton from "./DeleteTransactionButton";
 
-export default function TransactionCard({ transaction }) {
-  return (
+
+export default function TransactionCard({ transaction, deleteTransaction }) {
+    
+    return (
     <div
       key={transaction.id}
       className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
@@ -29,10 +32,15 @@ export default function TransactionCard({ transaction }) {
         <button className="p-1 hover:bg-gray-200 rounded">
           <Edit2 size={16} />
         </button>
-        <button className="p-1 hover:bg-gray-200 rounded">
+        {/* <button className="p-1 hover:bg-gray-200 rounded" onClick={()=> deleteTransaction(transaction._id)}>
           <Trash2 size={16} />
-        </button>
+        </button> */}
+        <DeleteTransactionButton 
+            transactionId={transaction._id}
+            onDelete={deleteTransaction}
+        />
       </div>
+      
     </div>
   );
 }
