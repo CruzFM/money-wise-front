@@ -17,6 +17,7 @@ import { Mail, Lock } from "lucide-react";
 import Layout from "./Layout";
 
 export default function Login() {
+
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const navigate = useNavigate();
@@ -26,14 +27,16 @@ export default function Login() {
     password: Yup.string().required("Password required"),
   });
 
-  const handleLogin = async (value) => {
+  const handleLogin = async (value, { setStatus, setSubmitting }) => {
     try {
       const response = await axios.post(`${apiUrl}/auth/login`, value);
       sessionStorage.setItem("auth_token", response.data.token);
-      console.log("Bien ahi wachin, lo lograste!", response.data.token);
       navigate("/");
     } catch (error) {
-      console.error("La cagaste en el login hermano: ", error);
+      console.error("Error logging in: ", error);
+      setStatus("Invalid email or password");
+    } finally {
+      setSubmitting(false)
     }
   };
 
@@ -50,12 +53,13 @@ export default function Login() {
       <Formik
         initialValues={{ email: "", password: "" }}
         validationSchema={LoginSchema}
-        onSubmit={(values) => {
-          handleLogin(values);
+        onSubmit={(values, {setStatus, setSubmitting}) => {
+          handleLogin(values, {setStatus, setSubmitting});
         }}
       >
-        {({ isSubmitting }) => (
+        {({ status, isSubmitting }) => (
           <Form>
+            {status && <div className="text-red-500 font-semibold text-center">{ status }</div>}
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium">
