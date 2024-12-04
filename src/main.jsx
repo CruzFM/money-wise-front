@@ -5,19 +5,33 @@ import './index.css'
 import App from './App.jsx'
 import Register from './components/auth/Register'
 import Login from './components/auth/Login'
+import ProtectedRoute from './routes/ProtectedRoute'
+import PublicRoute from './routes/PublicRoute'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />
+    element: (
+      <ProtectedRoute>
+        <App />
+      </ProtectedRoute>
+    )
   },
   {
     path: '/register',
-    element: <Register />
+    element: (
+    <PublicRoute>
+      <Register />
+    </PublicRoute>
+    )
   },
   {
     path: '/login',
-    element: <Login />
+    element: (
+    <PublicRoute>
+      <Login />
+    </PublicRoute>
+    )
   }
 ])
 
