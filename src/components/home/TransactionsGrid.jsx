@@ -40,7 +40,7 @@ export default function TransactionsGrid({ transactions, incomes, expenses, view
         <CardHeader>
           <CardTitle>Transactions</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-0 py-6 sm:p-6">
           <div className="space-y-4">
             { renderView() }
           </div>

@@ -1,14 +1,12 @@
-import { Edit2 } from "lucide-react"
 import DeleteTransactionButton from "./DeleteTransactionButton";
 import EditTransactionButton from "./EditTransactionButton";
 
-
 export default function TransactionCard({ transaction, deleteTransaction, updateTransaction }) {
-    
+
     return (
     <div
       key={transaction.id}
-      className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+      className="flex items-center justify-between px-2 py-4 sm:px-4 bg-gray-50 rounded-lg"
     >
       <div className="flex items-center gap-4">
         <div
@@ -17,13 +15,13 @@ export default function TransactionCard({ transaction, deleteTransaction, update
           }`}
         />
         <div>
-          <p className="font-medium">{transaction.description}</p>
+          <p className="font-medium text-sm sm:text-base">{transaction.description}</p>
           <p className="text-sm text-gray-500">{transaction.date}</p>
         </div>
       </div>
       <div className="flex items-center gap-4">
         <p
-          className={`font-medium ${
+          className={`text-sm sm:text-base font-medium ${
             transaction.type === "expense" ? "text-red-500" : "text-green-500"
           }`}
         >
@@ -39,7 +37,6 @@ export default function TransactionCard({ transaction, deleteTransaction, update
             onDelete={deleteTransaction}
         />
       </div>
-      
     </div>
   );
 }

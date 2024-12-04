@@ -53,7 +53,7 @@ export default function AddTransaction({
         .typeError("Amount must be a number"),
       description: Yup.string()
         .required("Description is required")
-        .max(100, "Description is too long"),
+        .max(25, "Description is too long"),
       date: Yup.date()
         .required("Date is required")
         .max(new Date(), "Date cannot be in the future"),
