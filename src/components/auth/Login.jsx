@@ -105,12 +105,12 @@ export default function Login() {
             </CardContent>
 
             <CardFooter className="flex flex-col space-y-4">
-              <Button type="submit" disabled={isSubmitting} className="w-full">
+              <Button type="submit" disabled={isSubmitting} className="w-full bg-green-500">
                 {isSubmitting ? "Signing in..." : "Sign in"}
               </Button>
 
               <div className="text-sm text-center text-gray-500">
-                Don&apos;t have an account?
+                Don&apos;t have an account? {" "}
                 <Link
                   to="/register"
                   className="text-primary hover:underline font-medium"

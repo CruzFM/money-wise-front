@@ -127,7 +127,7 @@ export default function Register() {
             </CardContent>
 
             <CardFooter className="flex flex-col space-y-4">
-              <Button type="submit" disabled={isSubmitting} className="w-full">
+              <Button type="submit" disabled={isSubmitting} className="w-full bg-green-500">
                 {isSubmitting ? "Creating account..." : "Create account"}
               </Button>
 

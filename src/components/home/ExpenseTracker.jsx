@@ -115,7 +115,7 @@ const ExpenseTracker = () => {
   return (
     <>
     <Navbar />
-    <div className="max-w-4xl mx-auto px-0 sm:p-4 space-y-6">
+    <div className="py-4 max-w-4xl mx-auto px-0 sm:p-4 space-y-6">
       {/* Header with Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
