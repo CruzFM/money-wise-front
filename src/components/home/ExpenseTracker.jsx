@@ -3,6 +3,7 @@ import {
   Plus,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AddTransaction from "./AddTransaction";
 import TransactionsGrid from "./TransactionsGrid";
@@ -17,16 +18,26 @@ const ExpenseTracker = () => {
 
   const apiUrl = import.meta.env.VITE_API_URL;
   const authToken = sessionStorage.getItem("auth_token");
+  const navigate = useNavigate();
 
   //Gets a single transaction array of Obj based on a string parameter
   const getTransaction = async ( transactionType, functionSetter ) => {
-    const transaction = await axios.get(`${apiUrl}/transactions/${transactionType}`,{
-      headers: {
-        Authorization: `Bearer ${authToken}`
-      } 
-    });
-    functionSetter(transaction.data)
-    console.log(`Ahora la transaccion del tipo ${transactionType} es: `, transaction);
+    try {
+      const transaction = await axios.get(`${apiUrl}/transactions/${transactionType}`,{
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        } 
+      });
+      functionSetter(transaction.data);
+    } catch (error) {
+      if(error.response?.status === 401){
+        console.error("Token has expired, redirecting to login...");
+        sessionStorage.removeItem("auth_token");
+        navigate('/login');
+      } else {
+        console.error("Error in obtaining the data: ", error);
+      }
+    }
   }
   
   //Calculates amount for each transaction
@@ -55,21 +66,37 @@ const ExpenseTracker = () => {
                 Authorization: `Bearer ${authToken}`,
             }, 
         })
-        if(response){ console.log( response ) }
+        if(response){ console.log( "Transaction added successfully: ", response ) }
         getAllTransactions();
     } catch (error) {
-        console.error(error);
+      if(error.response?.status === 401){
+        console.error("Token has expired, redirecting to login...");
+        sessionStorage.removeItem("auth_token");
+        navigate('/login');
+      } else{
+        console.error("Error obtaining the data, redirecting to login...");
+      }
     }
   };
 
   // Gets all transactions
   const getAllTransactions = async () => {
-    const response = await axios.get(`${apiUrl}/transactions/all`, {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
-    setTransactions(response.data);
+    try {
+      const response = await axios.get(`${apiUrl}/transactions/all`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      setTransactions(response.data);
+    } catch (error) {
+      if(error.response?.status === 401){
+        console.error("Token has expired, redirecting to login...");
+        sessionStorage.removeItem("auth_token");
+        navigate('/login');
+      } else{
+        console.error("Error obtaining the data, redirecting to login...");
+      }
+    }
   };
 
   const deleteTransaction = ( id ) => {
@@ -84,7 +111,15 @@ const ExpenseTracker = () => {
         getTransaction("expenses", setExpenses);
         console.log("transaction deleted successfully ", res.data)
       })
-      .catch(error => console.error(error))
+      .catch(error => {
+        if(error.response?.status === 401){
+          console.error("Token has expired, redirecting to login...");
+          sessionStorage.removeItem("auth_token");
+          navigate('/login');
+        } else {
+          console.error("Error obtaining the data, redirecting to login...");
+        }
+      })
   }
 
   const updateTransaction = (id, value) => {
@@ -98,7 +133,15 @@ const ExpenseTracker = () => {
       getTransaction("incomes", setIncomes);
       getTransaction("expenses", setExpenses);
     })
-    .catch(error => console.error(error))
+    .catch(error =>{
+      if(error.response?.status === 401){
+        console.error("Token has expired, redirecting to login...");
+        sessionStorage.removeItem("auth_token");
+        navigate('/login');
+      } else {
+        console.error("Error obtaining the data, redirecting to login...");
+      }
+    })
   }
 
   //When the component is mounted, it gets all transactions and incomes and expenses
@@ -108,10 +151,7 @@ const ExpenseTracker = () => {
     getTransaction("expenses", setExpenses);
   }, []);
 
-  useEffect( ()=>{
-    console.log(view)
-  },[view])
-
+  
   return (
     <>
     <Navbar />

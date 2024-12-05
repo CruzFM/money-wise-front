@@ -127,7 +127,7 @@ export default function EditTransactionButton({
 
               <AlertDialogFooter>
                 <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
-                <AlertDialogAction type="submit" disabled={isSubmitting}>
+                <AlertDialogAction type="submit" disabled={isSubmitting} className="bg-green-500">
                   {isSubmitting ? "Updating..." : "Update Transaction"}
                 </AlertDialogAction>
               </AlertDialogFooter>

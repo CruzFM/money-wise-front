@@ -31,10 +31,10 @@ export default function Register() {
     console.log(value);
     try {
       const response = await axios.post(`${apiUrl}/auth/register`, value);
-      console.log("usuario registrado", response);
+      console.log("User successfully registered", response);
       navigate("/login");
     } catch (error) {
-      console.error("la cagaste en el registro: ", error);
+      console.error("Error registering the user: ", error);
     }
   };
 
